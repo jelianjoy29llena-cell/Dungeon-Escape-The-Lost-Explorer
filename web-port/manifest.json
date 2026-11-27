@@ -16,5 +16,5 @@
   ],
   "id": "./",
   "description": "Explore 15 dungeon stages and defeat the Forgotten King.",
-  "orientation": "portrait-primary"
+  "orientation": "landscape"
 }
