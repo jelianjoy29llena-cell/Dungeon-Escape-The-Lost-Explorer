@@ -1,0 +1,71 @@
+name: Build Android APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [web-version]
+    paths: ['.github/workflows/android-apk.yml']
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - name: Prepare standalone game
+        run: |
+          mkdir -p apk-build/www
+          cp -r web-port/. apk-build/www/
+          cd apk-build
+          npm init -y
+          npm install --save-exact @capacitor/core@7 @capacitor/android@7 @capacitor/cli@7 phaser@3.90.0
+          cp node_modules/phaser/dist/phaser.min.js www/
+          sed -i 's|https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js|phaser.min.js|g' www/index.html
+          printf '%s\n' '{"appId":"com.dungeonescape.lostexplorer","appName":"Dungeon Escape","webDir":"www"}' > capacitor.config.json
+          npx cap add android
+          npx cap sync android
+      - name: Configure Android branding
+        run: |
+          python -m pip install Pillow
+          cd apk-build
+          python - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          from PIL import Image
+          ns='http://schemas.android.com/apk/res/android'
+          ET.register_namespace('android',ns)
+          p=Path('android/app/src/main/AndroidManifest.xml')
+          t=ET.parse(p)
+          app=t.getroot().find('application')
+          app.set('{'+ns+'}icon','@mipmap/dungeon_icon')
+          app.set('{'+ns+'}roundIcon','@mipmap/dungeon_icon')
+          for a in app.findall('activity'):
+              a.set('{'+ns+'}screenOrientation','sensorLandscape')
+          t.write(p,encoding='utf-8',xml_declaration=True)
+          im=Image.open('www/icons/original.png').convert('RGBA')
+          for density,size in [('mdpi',48),('hdpi',72),('xhdpi',96),('xxhdpi',144),('xxxhdpi',192)]:
+              d=Path('android/app/src/main/res/mipmap-'+density)
+              d.mkdir(parents=True,exist_ok=True)
+              im.resize((size,size),Image.Resampling.LANCZOS).save(d/'dungeon_icon.png')
+          p=Path('android/app/build.gradle')
+          s=p.read_text().replace('versionCode 1','versionCode 50000').replace('versionName "1.0"','versionName "5.0.0"')
+          p.write_text(s)
+          PY
+      - name: Build debug APK
+        run: |
+          cd apk-build/android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+          mkdir -p ../../output
+          cp app/build/outputs/apk/debug/app-debug.apk ../../output/Dungeon-Escape-v5.0.0.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Dungeon-Escape-v5.0.0
+          path: output/Dungeon-Escape-v5.0.0.apk
