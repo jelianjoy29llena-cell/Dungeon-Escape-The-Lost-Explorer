@@ -54,3 +54,5 @@ main[data-screen=intro]>*:not(.cinematic-scene){position:relative;z-index:1}
 main[data-screen=intro] .original-logo{box-shadow:0 0 0 4px #241927,0 0 0 5px #b38b50,0 0 38px #e8ad4638;animation:logo-glow 3s ease-in-out infinite alternate}
 main[data-screen=intro] h2,main[data-screen=intro] p{text-shadow:0 2px 5px #000}
 @media(prefers-reduced-motion:reduce){main[data-screen=intro] .original-logo{animation:none}}
+
+.wallet-label{color:#ffd477;font-weight:800;padding:8px 16px;border:1px solid #b38b50;border-radius:12px;background:#211a30}.gear-nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}.gear-card{display:grid;gap:8px;width:100%;padding:14px;border:1px solid #8b704c;border-radius:12px;background:linear-gradient(120deg,#34283e,#211a30)}.gear-card strong{color:#ffd477}.gear-card small{color:#d7c5ac}.hud #hp{flex-wrap:wrap}
