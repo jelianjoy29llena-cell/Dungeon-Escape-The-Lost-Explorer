@@ -17,7 +17,7 @@ let game=null,scene=null,state=null,page='',paused=false;let walk=null,facing='d
 function show(name,html){stopRoute();if(game){game.destroy(true);game=null;scene=null}page=name;paused=false;app.innerHTML=html}
 const btn=(label,action,primary=false)=>'<button '+(primary?'class="primary" ':'')+'data-action="'+action+'">'+label+'</button>';
 const logo='<div class="logo"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Dungeon explorer" style="display:block;width:100%;height:100%;border-radius:inherit;image-rendering:pixelated"><rect width="64" height="64" fill="#171321"/><path d="M8 56V25L16 12H48L56 25V56Z" fill="#51475c"/><path d="M15 56V28L23 19H41L49 28V56Z" fill="#252033"/><path d="M23 25H39V30H43V39H19V30H23Z" fill="#80502d"/><path d="M24 32H38V42H24Z" fill="#efbc85"/><path d="M26 35H29V38H26ZM34 35H37V38H34Z" fill="#211827"/><path d="M21 42H41V47H21Z" fill="#b83b39"/><path d="M24 47H38V55H24Z" fill="#427a78"/><path d="M23 55H30V59H23ZM33 55H40V59H33Z" fill="#91623c"/><path d="M46 33H49V53H46Z" fill="#9b6025"/><path d="M43 28H52V38H43Z" fill="#ffad38"/><path d="M46 24H49V34H46Z" fill="#ffe58b"/></svg></div><h1>DUNGEON<br><strong>ESCAPE</strong></h1><small>THE LOST EXPLORER</small>';
-function menu(){show('menu',logo+btn('▶ START ADVENTURE','levels',true)+btn('▤ HOW TO PLAY','help')+btn('⚙ SETTINGS','settings')+'<small>OFFLINE • SINGLE PLAYER</small><small>VERSION 2.1.0</small>')}
+function menu(){show('menu',logo+btn('▶ START ADVENTURE','levels',true)+btn('▤ HOW TO PLAY','help')+btn('⚙ SETTINGS','settings')+'<small>OFFLINE • SINGLE PLAYER</small><small>VERSION 2.2.0</small>')}
 let intro=0;const slides=[['EXPLORE THE DUNGEON','Find your way through the forgotten dungeon.'],['FIND THE KEY','Collect treasure, avoid traps and unlock the exit.'],['THE SHIFTING DUNGEON','Discover mysterious crystals in future levels.']];
 function onboarding(){show('intro','<small>DUNGEON ESCAPE</small>'+btn('SKIP','skip')+'<div class="logo">◇</div><h2>'+slides[intro][0]+'</h2><p>'+slides[intro][1]+'</p><small>'+(intro+1)+' / 3</small>'+btn(intro===2?'START ADVENTURE':'CONTINUE','next',true))}
 function levels(){const unlocked=Number(read('unlocked','0'));show('levels',btn('← BACK','menu')+'<h2>SELECT YOUR LEVEL</h2><p>Complete each level to unlock the next.</p>'+names.map((n,i)=>'<article><small>LEVEL '+(i+1)+'</small><h3>'+n.toUpperCase()+'</h3><p>'+['EASY','MEDIUM','HARD'][i]+' • Best: '+read('best'+i,'0')+'</p>'+(i<=unlocked?btn('▶ PLAY','level'+i,true):'<button disabled>LOCKED</button>')+'</article>').join(''))}
@@ -36,6 +36,20 @@ if(t==='T'){rect(x+5,y+12,30,23,0x100e17);rect(x+7,y+10,26,12,0xb87932);rect(x+7
 if(t==='X'){rect(x+4,y+5,32,30,0x3a2931);for(let i=0;i<3;i++)for(let j=0;j<2;j++){let a=x+7+i*10,b=y+7+j*14;rect(a+3,b,3,4,0xe2dce0);rect(a+2,b+4,5,4,0x9b94a3);rect(a,b+8,9,4,0x6d6576)}}
 if(t==='E'){rect(x+5,y+3,30,35,0x756779);rect(x+9,y+7,22,31,state.key?0x163e35:0x3f2824);for(let i=0;i<4;i++)rect(x+10+i*5,y+8,1,28,0x100e17);rect(x+25,y+22,4,4,0xffce62);if(state.key){rect(x+12,y+9,15,25,0x235b49);rect(x+15,y+12,9,19,0x38856a)}}
 }}
+// Decorative atmosphere, without changing collision tiles.
+const now=performance.now();
+for(let r=1;r<10;r++)for(let c=1;c<12;c++){
+const t=state.map[r][c],x=c*40,y=r*40,n=(r*37+c*19)%23;
+if(t==='#'&&state.map[r+1]?.[c]!=='#'&&n%5===0){
+const flicker=Math.sin(now/95+r+c)*2;
+for(let i=3;i>0;i--){g.fillStyle(0xffa53d,.025);g.fillCircle(x+20,y+25,i*15+flicker)}
+rect(x+18,y+24,4,11,0x855a35);rect(x+16,y+18,8,9,0xd77b29);rect(x+18,y+15+flicker,4,10,0xffdb78);
+}else if(t==='.'&&n%7===0){
+g.lineStyle(1,0x14121c,.8);g.beginPath();g.moveTo(x+4,y+8);g.lineTo(x+12,y+14);g.lineTo(x+9,y+20);g.lineTo(x+19,y+28);g.strokePath();
+}
+if(level===1&&t==='#'&&n%4===0){const glow=.08+.035*Math.sin(now/300+c);g.fillStyle(0x69bfff,glow);g.fillCircle(x+20,y+20,24);g.fillStyle(0x4a83b9);g.fillTriangle(x+9,y+29,x+18,y+7,x+24,y+29);g.fillStyle(0xa4d9ff);g.fillTriangle(x+18,y+7,x+20,y+29,x+24,y+29);g.fillStyle(0x785bc0);g.fillTriangle(x+22,y+30,x+29,y+14,x+34,y+30)}
+if(t==='.'&&n===3&&state.map[r-1][c]==='#'&&state.map[r][c-1]==='#'){g.lineStyle(1,0xaca1b7,.45);for(let i=1;i<=3;i++){g.lineBetween(x+2,y+i*6,x+i*6,y+2)}g.lineBetween(x+2,y+2,x+21,y+21);g.lineBetween(x+2,y+2,x+2,y+21);g.lineBetween(x+2,y+2,x+21,y+2)}
+}
 if(target){g.lineStyle(2,0xffcf68,.8);g.strokeRect(target[1]*40+4,target[0]*40+4,32,32)}
 for(const e of state.enemies){const x=e.c*40,y=e.r*40;rect(x+8,y+12,24,20,level===1?0x51bfa0:0xd5d0b9);rect(x+12,y+17,5,5,0x17131c);rect(x+23,y+17,5,5,0x17131c);rect(x+16,y+27,8,4,0x17131c)}
 const p=walk?Math.min(1,(performance.now()-walk.start)/300):1;const moving=p<1;const stride=moving?Math.sin(p*Math.PI*4)*2:0;const x=Math.round((walk?walk.c+(state.c-walk.c)*p:state.c)*40),y=Math.round((walk?walk.r+(state.r-walk.r)*p:state.r)*40);for(let i=3;i>0;i--){g.fillStyle(0xffb84c,.025+i*.01);g.fillCircle(x+20,y+20,i*23+Math.sin(Date.now()/180)*3);} rect(x+8,y+33,24,4,0x100e17);rect(x+12,y+5,16,4,0x513025);rect(x+9,y+9,22,10,0x75472b);rect(x+13,y+12,14,10,0xeab17b);if(facing==='up'){rect(x+13,y+12,14,10,0x75472b)}else if(facing==='left'){rect(x+14,y+15,3,3,0x211a25)}else if(facing==='right'){rect(x+24,y+15,3,3,0x211a25)}else{rect(x+15,y+15,3,3,0x211a25);rect(x+23,y+15,3,3,0x211a25)}rect(x+10,y+22,20,4,0xb83b39);rect(x+13,y+26,14,7,0x426c69);rect(x+9,y+26,4,7,0xeab17b);rect(x+27,y+26,4,7,0xeab17b);rect(x+12,y+33+Math.round(stride),7,4,0x68452e);rect(x+22,y+35-Math.round(stride),7,4,0x68452e);rect(x+32,y+17,3,14,0x9b6025);rect(x+30,y+12,7,8,0xffa53d);rect(x+32,y+10,3,7,0xffe18a);
