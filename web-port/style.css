@@ -48,3 +48,9 @@ main[data-screen=menu] button.primary{background:linear-gradient(110deg,#d59a45,
 @keyframes ember-rise{0%{transform:translate(0,0);opacity:0}15%{opacity:.8}85%{opacity:.4}100%{transform:translate(24px,-100dvh);opacity:0}}
 @keyframes logo-glow{to{box-shadow:0 0 0 4px #241927,0 0 0 5px #d9ae65,0 0 48px #e8ad4666}}
 @media(prefers-reduced-motion:reduce){main[data-screen=menu]>*:not(.cinematic-scene),main[data-screen=menu] .original-logo,.wall-torch i,.ember{animation:none}.ember{display:none}}
+
+main[data-screen=intro]{position:relative;isolation:isolate;overflow:hidden;min-height:100dvh;background:radial-gradient(ellipse at 50% 30%,#513529 0,#211927 48%,#100e18 85%)}
+main[data-screen=intro]>*:not(.cinematic-scene){position:relative;z-index:1}
+main[data-screen=intro] .original-logo{box-shadow:0 0 0 4px #241927,0 0 0 5px #b38b50,0 0 38px #e8ad4638;animation:logo-glow 3s ease-in-out infinite alternate}
+main[data-screen=intro] h2,main[data-screen=intro] p{text-shadow:0 2px 5px #000}
+@media(prefers-reduced-motion:reduce){main[data-screen=intro] .original-logo{animation:none}}
