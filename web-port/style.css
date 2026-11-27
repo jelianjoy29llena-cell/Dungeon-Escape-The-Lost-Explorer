@@ -7,3 +7,5 @@
 .north{top:9%;left:50%;transform:translateX(-50%)}.south{bottom:9%;left:50%;transform:translateX(-50%)}.west{left:9%;top:50%;transform:translateY(-50%)}.east{right:9%;top:50%;transform:translateY(-50%)}
 .stick{position:absolute;left:50%;top:50%;width:46%;aspect-ratio:1;border-radius:50%;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy)));background:radial-gradient(circle at 40% 30%,#786582,#493b57 70%);border:2px solid #d3ae69;box-shadow:inset 0 0 0 5px #ffffff0c,0 5px 0 #17121e,0 7px 10px #0008;pointer-events:none}
 .stick:after{content:'';position:absolute;inset:37%;border-radius:50%;background:#c9a466;box-shadow:0 0 7px #ffc85744}
+
+#board canvas{touch-action:none;cursor:crosshair}.move-tip{font-size:11px;letter-spacing:1.5px;padding:8px 0}
