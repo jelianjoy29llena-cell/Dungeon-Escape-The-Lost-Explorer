@@ -9,3 +9,20 @@
 .stick:after{content:'';position:absolute;inset:37%;border-radius:50%;background:#c9a466;box-shadow:0 0 7px #ffc85744}
 
 #board canvas{touch-action:none;cursor:crosshair}.move-tip{font-size:11px;letter-spacing:1.5px;padding:8px 0}
+
+/* Premium fantasy interface */
+main{background:radial-gradient(ellipse at 50% 0,#44304d 0,transparent 55%),linear-gradient(160deg,#211a30,#100e18 80%);gap:14px}
+main[data-screen=play]{justify-content:flex-start;padding:clamp(10px,3vw,22px);gap:10px}
+button{border-color:#8b704c;background:linear-gradient(#392b45,#211a30);box-shadow:0 3px 0 #100e18,inset 0 1px #ffffff14;transition:filter .15s,transform .15s}
+button:not(:disabled):hover{filter:brightness(1.18)}button:not(:disabled):active{transform:translateY(2px)}
+button.primary{background:linear-gradient(#ffe2a0,#dba34a);border-color:#ffe4a8;color:#251a18}
+article{border-color:#806647;background:linear-gradient(120deg,#30273b,#1a1725);box-shadow:0 4px 12px #0005}article h3{margin:8px 0 14px;color:#f7dfaa}article progress{height:9px;margin-bottom:12px}
+.realm{border-left:5px solid #819369}.realm-1{border-left-color:#7db6ed;background:linear-gradient(120deg,#243953,#1a1725)}.realm-2{border-left-color:#e1b45e;background:linear-gradient(120deg,#49342c,#1a1725)}
+.stage-card.cleared{border-left:4px solid #75b58b}.stage-card.current{border-left:4px solid #ffc857}.stage-card.locked{opacity:.65}
+.campaign-summary{padding:14px;border:1px solid #806647;border-radius:12px;background:#171321aa;display:grid;gap:8px}.campaign-summary strong{font-size:20px}
+.game-heading{font-weight:900;letter-spacing:1px;color:#ffe0a0;padding:10px;border-bottom:1px solid #8b704c}
+main[data-screen=play] button{font-size:clamp(10px,2.8vw,14px);padding:12px 4px}
+.hud{align-items:center;background:#171321;border:1px solid #665339;border-radius:10px;padding:9px 7px;flex-wrap:wrap;font-size:12px}.heart{font-size:clamp(15px,4vw,23px);line-height:1}.heart.full{color:#ff6378;text-shadow:0 0 7px #ff637855}.heart.empty{color:#4e3546}#score{color:#ffd477;font-weight:bold}#key{color:#b8e0c8;font-size:10px}
+#board{outline:2px solid #8b704c;box-shadow:0 0 18px #0008}#hint{color:#e9d6ae;font-size:13px;margin:6px 0}
+dialog{border:2px solid #b38b50;background:linear-gradient(#35283f,#171321);padding:24px;box-shadow:0 12px 60px #000b;text-align:center;width:min(420px,90vw)}dialog::backdrop{background:#090711cc}.modal-emblem{font-size:48px;color:#ffd477;text-shadow:0 0 18px #ffc85755}dialog[data-kind=loss] .modal-emblem{color:#ff7884}.modal-actions{display:grid;gap:8px;margin-top:18px}.modal-actions button{margin:0}dialog p{line-height:1.5}
+@media(prefers-reduced-motion:reduce){button{transition:none}.pulse{animation:none}}
